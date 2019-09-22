@@ -1,4 +1,5 @@
 
+from django.db.models import Q
 from rest_framework import viewsets
 
 
@@ -32,8 +33,10 @@ class BranchViewSet(viewsets.ModelViewSet):
         city = self.request.query_params.get('city', None)
 
         if bank_name is not None and city is not None:
-            queryset = queryset.filter(bank_name__icontains=bank_name,
-                                       city__icontains=city)
+            queryset = queryset.filter(
+                Q(bank_name__icontains=bank_name) &
+                Q(city__icontains=city),
+            )
         else:
             return []
 
